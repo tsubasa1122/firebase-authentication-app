@@ -6,6 +6,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
  */
 export type AuthState = {
   isSignedIn: boolean;
+  isLoading: boolean;
   userId: string | undefined;
   userName: string | undefined;
 };
@@ -16,6 +17,7 @@ export type AuthState = {
  */
 const INITIAL_AUTH_STATE: AuthState = {
   isSignedIn: false,
+  isLoading: true,
   userId: undefined,
   userName: undefined,
 };
@@ -23,7 +25,7 @@ const INITIAL_AUTH_STATE: AuthState = {
 /**
  * ユーザーのサインイン状態を取得するためのカスタムフック。
  */
-export function useAuthState(): AuthState {
+export const useAuthState = (): AuthState => {
   const [authState, setAuthState] = useState(INITIAL_AUTH_STATE);
 
   // サインイン状態の変化を監視する
@@ -32,11 +34,12 @@ export function useAuthState(): AuthState {
       if (user) {
         setAuthState({
           isSignedIn: true,
+          isLoading: false,
           userId: user.uid,
           userName: user.displayName || undefined,
         });
       } else {
-        setAuthState({ ...INITIAL_AUTH_STATE });
+        setAuthState({ ...INITIAL_AUTH_STATE, isLoading: false });
       }
     });
 
@@ -45,4 +48,4 @@ export function useAuthState(): AuthState {
   }, []);
 
   return authState;
-}
+};
