@@ -1,10 +1,14 @@
 import type { NextPage } from "next";
 import NextLink from "next/link";
 import { Box, chakra, Container, VStack } from "@chakra-ui/react";
+import { getApp, FirebaseApp } from "firebase/app";
 
 const Home: NextPage = () => {
+  const app: FirebaseApp = getApp();
+
   return (
     <Container maxW="md" padding={10} textAlign="center">
+      <div>{app.name}</div>
       <chakra.h1 textAlign="center" fontSize={24}>
         Homeページだよ
       </chakra.h1>
