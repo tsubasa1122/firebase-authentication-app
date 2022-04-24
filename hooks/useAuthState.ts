@@ -9,6 +9,7 @@ export type AuthState = {
   isLoading: boolean;
   userId: string | undefined;
   userName: string | undefined;
+  idToken: string | undefined;
 };
 
 /**
@@ -20,6 +21,7 @@ const INITIAL_AUTH_STATE: AuthState = {
   isLoading: true,
   userId: undefined,
   userName: undefined,
+  idToken: undefined,
 };
 
 /**
@@ -30,13 +32,16 @@ export const useAuthState = (): AuthState => {
 
   // サインイン状態の変化を監視する
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
+    const unsubscribe = onAuthStateChanged(getAuth(), async (user) => {
       if (user) {
+        const toekn = await user.getIdToken();
+
         setAuthState({
           isSignedIn: true,
           isLoading: false,
           userId: user.uid,
           userName: user.displayName || undefined,
+          idToken: toekn,
         });
       } else {
         setAuthState({ ...INITIAL_AUTH_STATE, isLoading: false });
